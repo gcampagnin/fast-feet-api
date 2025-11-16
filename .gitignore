@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Transpiled/build output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Runtime artifacts
+uploads/
+tmp/
+temp/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Prisma generated assets
+generated/
+/generated/
+prisma/generated/
+
+# Environment & secrets (keep example for reference)
+.env
+.env.*
+!.env.example
+*.local
+
+# OS / IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Misc
+*.pem
+*.key

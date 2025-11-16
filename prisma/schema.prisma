@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  COURIER
+}
+
+enum OrderStatus {
+  PENDING
+  AWAITING
+  WITHDRAWN
+  DELIVERED
+  RETURNED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  cpf          String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  courier Courier?
+}
+
+model Courier {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  phone     String?
+  vehicle   String?
+  user      User     @relation(fields: [userId], references: [id])
+  orders    Order[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Recipient {
+  id          String    @id @default(uuid())
+  name        String
+  street      String
+  number      String
+  complement  String?
+  city        String
+  state       String
+  cep         String
+  latitude    Float?
+  longitude   Float?
+  email       String?
+  phone       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  orders      Order[]
+  notifications Notification[]
+}
+
+model Order {
+  id             String        @id @default(uuid())
+  description    String?
+  status         OrderStatus   @default(PENDING)
+  recipientId    String        @map("recipient_id")
+  courierId      String?       @map("courier_id")
+  trackingCode   String        @unique @map("tracking_code")
+  deliveryPhoto  String?       @map("delivery_photo")
+  awaitingAt     DateTime?     @map("awaiting_at")
+  withdrawnAt    DateTime?     @map("withdrawn_at")
+  deliveredAt    DateTime?     @map("delivered_at")
+  returnedAt     DateTime?     @map("returned_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  recipient Recipient @relation(fields: [recipientId], references: [id])
+  courier   Courier?  @relation(fields: [courierId], references: [id])
+  events    DeliveryEvent[]
+  notifications Notification[]
+}
+
+model DeliveryEvent {
+  id        String   @id @default(uuid())
+  orderId   String   @map("order_id")
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  order     Order    @relation(fields: [orderId], references: [id])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  orderId     String   @map("order_id")
+  recipientId String   @map("recipient_id")
+  status      String
+  channel     String
+  payload     Json?
+  success     Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  order       Order    @relation(fields: [orderId], references: [id])
+  recipient   Recipient @relation(fields: [recipientId], references: [id])
+}
