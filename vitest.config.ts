@@ -6,5 +6,6 @@ export default defineConfig({
     environment: "node",
     pool: "vmThreads",
     maxConcurrency: 1,
+    setupFiles: ["./vitest.setup.ts"],
   },
 });
