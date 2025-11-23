@@ -64,8 +64,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async findAwaitingOrdersWithRecipient(courierId: string) {
     return prisma.order.findMany({
       where: {
-        courierId,
         status: "AWAITING",
+        OR: [{ courierId: null }, { courierId }],
         recipient: {
           latitude: { not: null },
           longitude: { not: null },

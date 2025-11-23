@@ -136,18 +136,18 @@ describe("OrdersService", () => {
       }),
     ).rejects.toBeInstanceOf(AppError);
 
-    const withdrawed = buildOrder();
-    ordersRepositoryMocks.findById.mockResolvedValue(withdrawed);
+    const withdrawn = buildOrder();
+    ordersRepositoryMocks.findById.mockResolvedValue(withdrawn);
     const delivered = buildOrder({ status: "DELIVERED", deliveryPhoto: "photo.jpg", deliveredAt: new Date() });
     ordersRepositoryMocks.update.mockResolvedValue(delivered);
 
     await service.deliverOrder({
-      orderId: withdrawed.id,
+      orderId: withdrawn.id,
       courierUserId: sampleCourier.userId,
       photoPath: "photo.jpg",
     });
 
-    expect(ordersRepositoryMocks.update).toHaveBeenCalledWith(withdrawed.id, {
+    expect(ordersRepositoryMocks.update).toHaveBeenCalledWith(withdrawn.id, {
       status: "DELIVERED",
       deliveryPhoto: "photo.jpg",
       deliveredAt: expect.any(Date),

@@ -97,7 +97,7 @@ src/
 | Entregadores | `POST/GET/PUT/DELETE /couriers` (admin) |
 | Destinatários | `POST/GET/PUT/DELETE /recipients` (admin) |
 | Encomendas | `POST/GET/PUT/DELETE /orders`, `PATCH /orders/:id/await` (admin) |
-| Fluxo do entregador | `GET /courier/me/orders`, `PATCH /courier/orders/:id/withdraw`, `PATCH /courier/orders/:id/deliver` (multipart), `PATCH /courier/orders/:id/return`, `GET /courier/orders/nearby` |
+| Fluxo do entregador | `GET /courier/me/orders`, `GET /courier/:courierId/orders`, `PATCH /courier/orders/:id/withdraw`, `PATCH /courier/orders/:id/deliver` (multipart), `PATCH /courier/orders/:id/return`, `GET /courier/orders/nearby` |
 
 Veja o arquivo [`fastfeet_prd.md`](fastfeet_prd.md) para o detalhamento completo de regras de negócio e fluxos.
 
