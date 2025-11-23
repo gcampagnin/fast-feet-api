@@ -54,6 +54,9 @@ describe("Auth HTTP routes", () => {
     expect(response.statusCode).toBe(200);
     expect(body).toHaveProperty("token");
     expect(body.user).toMatchObject({ id: "user-1", role: "ADMIN" });
+
+    const payload = await app.jwt.verify(body.token);
+    expect(payload).toMatchObject({ sub: "user-1", role: "ADMIN" });
   });
 
   it("allows admins to change passwords", async () => {
